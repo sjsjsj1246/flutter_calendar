@@ -2,30 +2,32 @@ import 'package:flutter/material.dart';
 import 'package:flutter_calendar/const/colors.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-class Calendar extends StatefulWidget {
-  const Calendar({Key? key}) : super(key: key);
+class Calendar extends StatelessWidget {
+  final DateTime? selectedDay;
+  final DateTime focusedDay;
+  final OnDaySelected onDaySelected;
 
-  @override
-  State<Calendar> createState() => _CalendarState();
-}
-
-class _CalendarState extends State<Calendar> {
-  DateTime? selectedDay;
-  DateTime focusedDay = DateTime.now();
-  BoxDecoration defaultBoxDecoration = BoxDecoration(
-    color: Colors.grey[200],
-    borderRadius: BorderRadius.circular(6.0),
-  );
-  TextStyle defaultTextStyle = TextStyle(
-    fontWeight: FontWeight.w700,
-    color: Colors.grey[600],
-  );
+  const Calendar(
+      {required this.selectedDay,
+      required this.focusedDay,
+      required this.onDaySelected,
+      Key? key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    BoxDecoration defaultBoxDecoration = BoxDecoration(
+      color: Colors.grey[200],
+      borderRadius: BorderRadius.circular(6.0),
+    );
+    TextStyle defaultTextStyle = TextStyle(
+      fontWeight: FontWeight.w700,
+      color: Colors.grey[600],
+    );
+
     return TableCalendar(
       locale: 'ko_KR',
-      focusedDay: focusedDay,
+      focusedDay: this.focusedDay,
       firstDay: DateTime(1800),
       lastDay: DateTime(3000),
       headerStyle: HeaderStyle(
@@ -45,18 +47,13 @@ class _CalendarState extends State<Calendar> {
           weekendTextStyle: defaultTextStyle,
           selectedTextStyle: defaultTextStyle.copyWith(color: PRIMARY_COLOR),
           outsideDecoration: BoxDecoration(shape: BoxShape.rectangle)),
-      onDaySelected: (DateTime selectedDay, DateTime focusedDay) {
-        setState(() {
-          this.selectedDay = selectedDay;
-          this.focusedDay = selectedDay;
-        });
-      },
+      onDaySelected: this.onDaySelected,
       selectedDayPredicate: (DateTime day) {
-        if (selectedDay == null) return false;
+        if (this.selectedDay == null) return false;
 
-        return day.year == selectedDay!.year &&
-            day.month == selectedDay!.month &&
-            day.day == selectedDay!.day;
+        return day.year == this.selectedDay!.year &&
+            day.month == this.selectedDay!.month &&
+            day.day == this.selectedDay!.day;
       },
     );
   }
