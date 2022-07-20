@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_calendar/components/calendar.dart';
+import 'package:flutter_calendar/components/schedule_card.dart';
 import 'package:flutter_calendar/components/today_banner.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -27,7 +28,16 @@ class _HomeScreenState extends State<HomeScreen> {
                   focusedDay: focusedDay,
                   onDaySelected: onDaySelected),
               SizedBox(height: 8.0),
-              TodayBanner(selectedDay: selectedDay, scheduleCount: 5)
+              TodayBanner(selectedDay: selectedDay, scheduleCount: 5),
+              SizedBox(height: 8.0),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: ScheduleCard(
+                    startTime: 8,
+                    endTime: 14,
+                    content: '프로그래밍 공부하기',
+                    color: Colors.red),
+              )
             ],
           ),
         ),
