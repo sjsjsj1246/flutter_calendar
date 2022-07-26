@@ -23,19 +23,17 @@ class _HomeScreenState extends State<HomeScreen> {
     return SafeArea(
       child: Scaffold(
         floatingActionButton: renderFloatingActionButton(),
-        body: SafeArea(
-          child: Column(
-            children: [
-              Calendar(
-                  selectedDay: selectedDay,
-                  focusedDay: focusedDay,
-                  onDaySelected: onDaySelected),
-              SizedBox(height: 8.0),
-              TodayBanner(selectedDay: selectedDay, scheduleCount: 5),
-              SizedBox(height: 8.0),
-              _ScheduleList()
-            ],
-          ),
+        body: Column(
+          children: [
+            Calendar(
+                selectedDay: selectedDay,
+                focusedDay: focusedDay,
+                onDaySelected: onDaySelected),
+            SizedBox(height: 8.0),
+            TodayBanner(selectedDay: selectedDay, scheduleCount: 5),
+            SizedBox(height: 8.0),
+            _ScheduleList()
+          ],
         ),
       ),
     );
