@@ -365,14 +365,14 @@ class $SchedulesTable extends Schedules
 
 class CategoryColor extends DataClass implements Insertable<CategoryColor> {
   final int id;
-  final int hexCode;
+  final String hexCode;
   CategoryColor({required this.id, required this.hexCode});
   factory CategoryColor.fromData(Map<String, dynamic> data, {String? prefix}) {
     final effectivePrefix = prefix ?? '';
     return CategoryColor(
       id: const IntType()
           .mapFromDatabaseResponse(data['${effectivePrefix}id'])!,
-      hexCode: const IntType()
+      hexCode: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}hex_code'])!,
     );
   }
@@ -380,7 +380,7 @@ class CategoryColor extends DataClass implements Insertable<CategoryColor> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
-    map['hex_code'] = Variable<int>(hexCode);
+    map['hex_code'] = Variable<String>(hexCode);
     return map;
   }
 
@@ -396,7 +396,7 @@ class CategoryColor extends DataClass implements Insertable<CategoryColor> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return CategoryColor(
       id: serializer.fromJson<int>(json['id']),
-      hexCode: serializer.fromJson<int>(json['hexCode']),
+      hexCode: serializer.fromJson<String>(json['hexCode']),
     );
   }
   @override
@@ -404,11 +404,11 @@ class CategoryColor extends DataClass implements Insertable<CategoryColor> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
-      'hexCode': serializer.toJson<int>(hexCode),
+      'hexCode': serializer.toJson<String>(hexCode),
     };
   }
 
-  CategoryColor copyWith({int? id, int? hexCode}) => CategoryColor(
+  CategoryColor copyWith({int? id, String? hexCode}) => CategoryColor(
         id: id ?? this.id,
         hexCode: hexCode ?? this.hexCode,
       );
@@ -433,18 +433,18 @@ class CategoryColor extends DataClass implements Insertable<CategoryColor> {
 
 class CategoryColorsCompanion extends UpdateCompanion<CategoryColor> {
   final Value<int> id;
-  final Value<int> hexCode;
+  final Value<String> hexCode;
   const CategoryColorsCompanion({
     this.id = const Value.absent(),
     this.hexCode = const Value.absent(),
   });
   CategoryColorsCompanion.insert({
     this.id = const Value.absent(),
-    required int hexCode,
+    required String hexCode,
   }) : hexCode = Value(hexCode);
   static Insertable<CategoryColor> custom({
     Expression<int>? id,
-    Expression<int>? hexCode,
+    Expression<String>? hexCode,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -452,7 +452,7 @@ class CategoryColorsCompanion extends UpdateCompanion<CategoryColor> {
     });
   }
 
-  CategoryColorsCompanion copyWith({Value<int>? id, Value<int>? hexCode}) {
+  CategoryColorsCompanion copyWith({Value<int>? id, Value<String>? hexCode}) {
     return CategoryColorsCompanion(
       id: id ?? this.id,
       hexCode: hexCode ?? this.hexCode,
@@ -466,7 +466,7 @@ class CategoryColorsCompanion extends UpdateCompanion<CategoryColor> {
       map['id'] = Variable<int>(id.value);
     }
     if (hexCode.present) {
-      map['hex_code'] = Variable<int>(hexCode.value);
+      map['hex_code'] = Variable<String>(hexCode.value);
     }
     return map;
   }
@@ -496,9 +496,9 @@ class $CategoryColorsTable extends CategoryColors
       defaultConstraints: 'PRIMARY KEY AUTOINCREMENT');
   final VerificationMeta _hexCodeMeta = const VerificationMeta('hexCode');
   @override
-  late final GeneratedColumn<int?> hexCode = GeneratedColumn<int?>(
+  late final GeneratedColumn<String?> hexCode = GeneratedColumn<String?>(
       'hex_code', aliasedName, false,
-      type: const IntType(), requiredDuringInsert: true);
+      type: const StringType(), requiredDuringInsert: true);
   @override
   List<GeneratedColumn> get $columns => [id, hexCode];
   @override
