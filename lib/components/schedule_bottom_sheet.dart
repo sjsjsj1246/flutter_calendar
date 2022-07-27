@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_calendar/components/custom_text_field.dart';
 import 'package:flutter_calendar/const/colors.dart';
+import 'package:flutter_calendar/database/drift_database.dart';
+import 'package:flutter_calendar/model/category_color.dart';
+import 'package:get_it/get_it.dart';
 
 class ScheduleBottomSheet extends StatefulWidget {
   const ScheduleBottomSheet({Key? key}) : super(key: key);
@@ -52,7 +55,18 @@ class _ScheduleBottomSheetState extends State<ScheduleBottomSheet> {
                       },
                     ),
                     SizedBox(height: 16.0),
-                    _ColorPicker(),
+                    FutureBuilder<List<CategoryColor>>(
+                        future: GetIt.I<LocalDatabase>().getCategoryColors(),
+                        builder: (context, snapshot) {
+                          return _ColorPicker(
+                              colors: snapshot.hasData
+                                  ? snapshot.data!
+                                      .map((e) => Color(int.parse(
+                                          'FF${e.hexCode}',
+                                          radix: 16)))
+                                      .toList()
+                                  : []);
+                        }),
                     _SaveButton(
                       onPressed: onSavePressed,
                     )
@@ -121,22 +135,16 @@ class _Content extends StatelessWidget {
 }
 
 class _ColorPicker extends StatelessWidget {
-  const _ColorPicker({Key? key}) : super(key: key);
+  final List<Color> colors;
+
+  const _ColorPicker({required this.colors, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Wrap(
       spacing: 8.0,
       runSpacing: 10.0,
-      children: [
-        renderColor(Colors.red),
-        renderColor(Colors.orange),
-        renderColor(Colors.yellow),
-        renderColor(Colors.green),
-        renderColor(Colors.blue),
-        renderColor(Colors.indigo),
-        renderColor(Colors.purple),
-      ],
+      children: colors.map((color) => renderColor(color)).toList(),
     );
   }
 
