@@ -23,7 +23,30 @@ class CustomTextField extends StatelessWidget {
   }
 
   Widget renderTextField() {
-    return TextField(
+    return TextFormField(
+      validator: (String? value) {
+        if (value == null || value.isEmpty) {
+          return '값을 입력해주세요';
+        }
+
+        if (isTime) {
+          int time = int.parse(value);
+
+          if (time < 0) {
+            return '0 이상의 숫자를 입력해주세요';
+          }
+
+          if (time > 24) {
+            return '24 이하의 숫자를 입력해주세요';
+          }
+        } else {
+          if (value.length > 500) {
+            return "500자 이하의 글자를 입력해주세요";
+          }
+        }
+
+        return null;
+      },
       expands: !isTime,
       keyboardType: isTime ? TextInputType.number : TextInputType.multiline,
       maxLines: isTime ? 1 : null,
