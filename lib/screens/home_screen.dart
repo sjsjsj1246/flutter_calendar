@@ -33,7 +33,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 focusedDay: focusedDay,
                 onDaySelected: onDaySelected),
             SizedBox(height: 8.0),
-            TodayBanner(selectedDay: selectedDate, scheduleCount: 5),
+            TodayBanner(selectedDay: selectedDate),
             SizedBox(height: 8.0),
             _ScheduleList(selectedDate: selectedDate)
           ],
