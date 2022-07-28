@@ -24,6 +24,8 @@ class LocalDatabase extends _$LocalDatabase {
   Future<int> createCategoryColor(CategoryColorsCompanion data) =>
       into(categoryColors).insert(data);
 
+  Stream<List<Schedule>> watchSchedule() => select(schedules).watch();
+
   Future<List<Schedule>> getSchedules() => select(schedules).get();
 
   Future<List<CategoryColor>> getCategoryColors() =>

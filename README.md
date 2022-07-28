@@ -15,3 +15,5 @@
 code generation
 
 - flutter pub run build_runner build
+
+timezone 잘 맞추자

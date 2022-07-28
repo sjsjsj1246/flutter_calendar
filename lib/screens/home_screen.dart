@@ -4,6 +4,8 @@ import 'package:flutter_calendar/components/schedule_bottom_sheet.dart';
 import 'package:flutter_calendar/components/schedule_card.dart';
 import 'package:flutter_calendar/components/today_banner.dart';
 import 'package:flutter_calendar/const/colors.dart';
+import 'package:flutter_calendar/database/drift_database.dart';
+import 'package:get_it/get_it.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -14,8 +16,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  DateTime selectedDate =
-      DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
+  DateTime selectedDate = DateTime.utc(
+      DateTime.now().year, DateTime.now().month, DateTime.now().day);
   DateTime focusedDay = DateTime.now();
 
   @override
@@ -32,7 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
             SizedBox(height: 8.0),
             TodayBanner(selectedDay: selectedDate, scheduleCount: 5),
             SizedBox(height: 8.0),
-            _ScheduleList()
+            _ScheduleList(selectedDate: selectedDate)
           ],
         ),
       ),
@@ -65,26 +67,44 @@ class _HomeScreenState extends State<HomeScreen> {
 }
 
 class _ScheduleList extends StatelessWidget {
-  const _ScheduleList({Key? key}) : super(key: key);
+  final DateTime selectedDate;
+
+  const _ScheduleList({required this.selectedDate, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Expanded(
       child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          child: ListView.separated(
-            itemCount: 100,
-            separatorBuilder: (BuildContext context, int index) =>
-                const SizedBox(height: 8.0),
-            itemBuilder: (context, index) {
-              print(index);
-              return ScheduleCard(
-                  startTime: 8,
-                  endTime: 14,
-                  content: '프로그래밍 공부하기 ${index + 1}',
-                  color: Colors.red);
-            },
-          )),
+          child: StreamBuilder<List<Schedule>>(
+              stream: GetIt.I<LocalDatabase>().watchSchedule(),
+              builder: (context, snapshot) {
+                print(snapshot.data);
+
+                List<Schedule> schedules = [];
+
+                if (snapshot.hasData) {
+                  schedules = snapshot.data!
+                      .where((element) => element.date == selectedDate)
+                      .toList();
+                }
+
+                print("filtered Data: $schedules");
+                print("selectedDate: $selectedDate");
+
+                return ListView.separated(
+                  itemCount: 100,
+                  separatorBuilder: (BuildContext context, int index) =>
+                      const SizedBox(height: 8.0),
+                  itemBuilder: (context, index) {
+                    return ScheduleCard(
+                        startTime: 8,
+                        endTime: 14,
+                        content: '프로그래밍 공부하기 ${index + 1}',
+                        color: Colors.red);
+                  },
+                );
+              })),
     );
   }
 }
