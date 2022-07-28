@@ -24,24 +24,11 @@ class LocalDatabase extends _$LocalDatabase {
   Future<int> createCategoryColor(CategoryColorsCompanion data) =>
       into(categoryColors).insert(data);
 
-  Stream<List<Schedule>> watchSchedule() => select(schedules).watch();
-
-  Future<List<Schedule>> getSchedules() => select(schedules).get();
+  Stream<List<Schedule>> watchSchedule(DateTime date) =>
+      (select(schedules)..where((tbl) => tbl.date.equals(date))).watch();
 
   Future<List<CategoryColor>> getCategoryColors() =>
       select(categoryColors).get();
-
-  Future<bool> updateSchedule(SchedulesCompanion data) =>
-      update(schedules).replace(data);
-
-  Future<bool> updateCategoryColor(CategoryColorsCompanion data) =>
-      update(categoryColors).replace(data);
-
-  Future<int> deleteSchedule(SchedulesCompanion data) =>
-      delete(schedules).delete(data);
-
-  Future<int> deleteCategoryColor(CategoryColorsCompanion data) =>
-      delete(categoryColors).delete(data);
 
   @override
   int get schemaVersion => 1;
