@@ -1,3 +1,4 @@
+import 'package:drift/drift.dart' show Value;
 import 'package:flutter/material.dart';
 import 'package:flutter_calendar/components/custom_text_field.dart';
 import 'package:flutter_calendar/const/colors.dart';
@@ -90,18 +91,25 @@ class _ScheduleBottomSheetState extends State<ScheduleBottomSheet> {
     );
   }
 
-  void onSavePressed() {
+  void onSavePressed() async {
     if (formKey.currentState == null) {
       return;
     }
 
     if (formKey.currentState!.validate()) {
-      print("에러가 없습니다.");
       formKey.currentState!.save();
 
-      print("startTime: $startTime");
-      print("endTime: $endTime");
-      print("content: $content");
+      final key = await GetIt.I<LocalDatabase>().createSchedule(
+        SchedulesCompanion(
+          date: Value(widget.selectedDate),
+          startTime: Value(startTime!),
+          endTime: Value(endTime!),
+          content: Value(content!),
+          colorId: Value(selectedColorId!),
+        ),
+      );
+
+      Navigator.of(context).pop();
     } else {
       print("에러가 있습니다.");
     }
