@@ -42,8 +42,17 @@ class LocalDatabase extends _$LocalDatabase {
         .toList());
   }
 
+  Future<Schedule> getScheduleById(int id) =>
+      (select(schedules)..where((tbl) => tbl.id.equals(id))).getSingle();
+
   Future<List<CategoryColor>> getCategoryColors() =>
       select(categoryColors).get();
+
+  Future<int> deleteSchedule(int id) =>
+      (delete(schedules)..where((t) => t.id.equals(id))).go();
+
+  Future<int> updateScheduleById(int id, SchedulesCompanion data) =>
+      (update(schedules)..where((t) => t.id.equals(id))).write(data);
 
   @override
   int get schemaVersion => 1;

@@ -6,11 +6,13 @@ class CustomTextField extends StatelessWidget {
   final String lable;
   final bool isTime;
   final FormFieldSetter<String>? onSaved;
+  final String? initialValue;
 
   const CustomTextField(
       {required this.onSaved,
       required this.isTime,
       required this.lable,
+      required this.initialValue,
       Key? key})
       : super(key: key);
 
@@ -54,13 +56,17 @@ class CustomTextField extends StatelessWidget {
 
         return null;
       },
+      initialValue: initialValue,
       expands: !isTime,
       keyboardType: isTime ? TextInputType.number : TextInputType.multiline,
       maxLines: isTime ? 1 : null,
       inputFormatters: isTime ? [FilteringTextInputFormatter.digitsOnly] : [],
       cursorColor: Colors.grey,
       decoration: InputDecoration(
-          border: InputBorder.none, filled: true, fillColor: Colors.grey[300]),
+          border: InputBorder.none,
+          filled: true,
+          fillColor: Colors.grey[300],
+          suffixText: isTime ? '시' : ''),
     );
   }
 }
