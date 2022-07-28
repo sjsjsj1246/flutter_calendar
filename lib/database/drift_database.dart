@@ -4,6 +4,7 @@ import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:flutter_calendar/model/category_color.dart';
 import 'package:flutter_calendar/model/schedule.dart';
+import 'package:flutter_calendar/model/schedule_with_color.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -24,8 +25,22 @@ class LocalDatabase extends _$LocalDatabase {
   Future<int> createCategoryColor(CategoryColorsCompanion data) =>
       into(categoryColors).insert(data);
 
-  Stream<List<Schedule>> watchSchedule(DateTime date) =>
-      (select(schedules)..where((tbl) => tbl.date.equals(date))).watch();
+  Stream<List<ScheduleWithColor>> watchSchedule(DateTime date) {
+    final query = select(schedules).join([
+      innerJoin(categoryColors, categoryColors.id.equalsExp(schedules.colorId)),
+    ]);
+
+    query.where(schedules.date.equals(date));
+    query.orderBy([
+      OrderingTerm.asc(schedules.startTime),
+    ]);
+
+    return query.watch().map((rows) => rows
+        .map((row) => ScheduleWithColor(
+            schedule: row.readTable(schedules),
+            categoryColor: row.readTable(categoryColors)))
+        .toList());
+  }
 
   Future<List<CategoryColor>> getCategoryColors() =>
       select(categoryColors).get();
