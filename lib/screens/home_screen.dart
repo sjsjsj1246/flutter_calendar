@@ -14,7 +14,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  DateTime selectedDay =
+  DateTime selectedDate =
       DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
   DateTime focusedDay = DateTime.now();
 
@@ -26,11 +26,11 @@ class _HomeScreenState extends State<HomeScreen> {
         body: Column(
           children: [
             Calendar(
-                selectedDay: selectedDay,
+                selectedDay: selectedDate,
                 focusedDay: focusedDay,
                 onDaySelected: onDaySelected),
             SizedBox(height: 8.0),
-            TodayBanner(selectedDay: selectedDay, scheduleCount: 5),
+            TodayBanner(selectedDay: selectedDate, scheduleCount: 5),
             SizedBox(height: 8.0),
             _ScheduleList()
           ],
@@ -41,7 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   onDaySelected(DateTime selectedDay, DateTime focusedDay) {
     setState(() {
-      this.selectedDay = selectedDay;
+      this.selectedDate = selectedDay;
       this.focusedDay = selectedDay;
     });
   }
@@ -53,7 +53,9 @@ class _HomeScreenState extends State<HomeScreen> {
             isScrollControlled: true,
             context: context,
             builder: (_) {
-              return ScheduleBottomSheet();
+              return ScheduleBottomSheet(
+                selectedDate: selectedDate,
+              );
             });
       },
       backgroundColor: PRIMARY_COLOR,
